@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Ticketing System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <span class="brand-mark" aria-hidden="true">ET</span>
+        <div>
+          <h1>E-Ticketing System</h1>
+          <p>Routes, events, seats, bookings, and admin management</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <span id="current-user-pill" class="status-pill">Guest</span>
+        <button id="logout-button" class="ghost-button hidden" type="button">
+          <span aria-hidden="true">x</span>
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <nav class="module-tabs" aria-label="Main modules">
+      <button class="tab-button active" type="button" data-tab="user">
+        <span aria-hidden="true">01</span>
+        User Module
+      </button>
+      <button class="tab-button" type="button" data-tab="tickets">
+        <span aria-hidden="true">02</span>
+        Ticket Module
+      </button>
+      <button class="tab-button" type="button" data-tab="admin">
+        <span aria-hidden="true">03</span>
+        Admin Module
+      </button>
+    </nav>
+
+    <main>
+      <section id="user-panel" class="module-panel active" data-panel="user">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">User Module</p>
+            <h2>Registration, login, and profile</h2>
+          </div>
+          <span id="auth-state" class="module-state">Not signed in</span>
+        </div>
+
+        <div class="two-column-grid">
+          <form id="register-form" class="surface" autocomplete="on">
+            <h3>User Registration</h3>
+            <label>
+              Full Name
+              <input id="register-name" name="name" type="text" placeholder="Aarav Sharma" required>
+            </label>
+            <label>
+              Email
+              <input id="register-email" name="email" type="email" placeholder="aarav@example.com" required>
+            </label>
+            <label>
+              Password
+              <input id="register-password" name="password" type="password" minlength="4" placeholder="Minimum 4 characters" required>
+            </label>
+            <button class="primary-button" type="submit">
+              <span aria-hidden="true">+</span>
+              Create Account
+            </button>
+          </form>
+
+          <form id="login-form" class="surface" autocomplete="on">
+            <h3>User Login</h3>
+            <label>
+              Email
+              <input id="login-email" name="email" type="email" placeholder="aarav@example.com" required>
+            </label>
+            <label>
+              Password
+              <input id="login-password" name="password" type="password" placeholder="Your password" required>
+            </label>
+            <button class="primary-button" type="submit">
+              <span aria-hidden="true">&gt;</span>
+              Login
+            </button>
+          </form>
+        </div>
+
+        <form id="profile-form" class="surface profile-surface" autocomplete="on">
+          <div class="section-title-row">
+            <h3>Profile Management</h3>
+            <span id="profile-badge" class="small-badge">Guest profile</span>
+          </div>
+          <div class="form-grid">
+            <label>
+              Full Name
+              <input id="profile-name" name="name" type="text" disabled>
+            </label>
+            <label>
+              Phone
+              <input id="profile-phone" name="phone" type="tel" placeholder="9876543210" disabled>
+            </label>
+            <label>
+              City
+              <input id="profile-city" name="city" type="text" placeholder="Mumbai" disabled>
+            </label>
+            <label>
+              Email
+              <input id="profile-email" name="email" type="email" disabled>
+            </label>
+          </div>
+          <button id="profile-save" class="secondary-button" type="submit" disabled>
+            <span aria-hidden="true">v</span>
+            Save Profile
+          </button>
+        </form>
+      </section>
+
+      <section id="tickets-panel" class="module-panel" data-panel="tickets">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Ticket Module</p>
+            <h2>Search, seat selection, booking, cancellation, download</h2>
+          </div>
+          <span id="ticket-state" class="module-state">Choose a route or event</span>
+        </div>
+
+        <section class="stats-grid" aria-label="Ticket overview">
+          <article class="stat-card">
+            <span class="stat-label">Active Routes/Events</span>
+            <strong id="ticket-stat-routes">0</strong>
+            <span class="stat-note">Ready for booking</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Available Seats</span>
+            <strong id="ticket-stat-seats">0</strong>
+            <span class="stat-note">Across active listings</span>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">My Active Tickets</span>
+            <strong id="ticket-stat-user-bookings">0</strong>
+            <span class="stat-note">Booked tickets</span>
+          </article>
+          <article class="stat-card accent-stat">
+            <span class="stat-label">My Spend</span>
+            <strong id="ticket-stat-user-spend">₹0</strong>
+            <span class="stat-note">Confirmed value</span>
+          </article>
+        </section>
+
+        <form id="search-form" class="surface search-surface">
+          <div class="form-grid search-grid">
+            <label>
+              Type
+              <select id="search-type">
+                <option value="Bus" selected>Bus</option>
+                <option value="Train">Train</option>
+                <option value="Event">Event</option>
+              </select>
+            </label>
+            <label>
+              From / Venue
+              <input id="search-origin" type="text" placeholder="Delhi, Pune, Stadium">
+            </label>
+            <label>
+              To / Category
+              <input id="search-destination" type="text" placeholder="Jaipur, Music, Conference">
+            </label>
+            <label>
+              Date
+              <input id="search-date" type="date">
+            </label>
+            <label>
+              Sort By
+              <select id="search-sort">
+                <option value="date">Earliest First</option>
+                <option value="price">Lowest Price</option>
+                <option value="seats">Most Seats</option>
+                <option value="name">Name</option>
+              </select>
+            </label>
+          </div>
+          <div class="button-row">
+            <button class="primary-button" type="submit">
+              <span aria-hidden="true">&gt;</span>
+              Search Routes/Events
+            </button>
+            <button id="clear-search" class="ghost-button" type="button">
+              <span aria-hidden="true">x</span>
+              Clear
+            </button>
+          </div>
+        </form>
+
+        <div class="ticket-layout">
+          <section class="surface results-surface" aria-labelledby="routes-heading">
+            <div class="section-title-row">
+              <h3 id="routes-heading">Available Routes/Events</h3>
+              <span id="results-count" class="small-badge">0 results</span>
+            </div>
+            <div class="route-type-slider" role="tablist" aria-label="Choose listing type">
+              <button class="route-type-option active" type="button" data-route-type="Bus" role="tab" aria-selected="true">
+                Bus
+              </button>
+              <button class="route-type-option" type="button" data-route-type="Train" role="tab" aria-selected="false">
+                Train
+              </button>
+              <button class="route-type-option" type="button" data-route-type="Event" role="tab" aria-selected="false">
+                Event
+              </button>
+            </div>
+            <div id="route-results" class="route-list"></div>
+          </section>
+
+          <section class="surface seat-surface" aria-labelledby="seats-heading">
+            <div class="section-title-row">
+              <h3 id="seats-heading">View Available Seats</h3>
+              <span id="selected-seat-count" class="small-badge">0 selected</span>
+            </div>
+            <div id="selected-route-summary" class="selected-route-summary">
+              Select a route or event to view seats.
+            </div>
+            <div class="seat-legend" aria-label="Seat legend">
+              <span><i class="legend-dot available"></i>Available</span>
+              <span><i class="legend-dot selected"></i>Selected</span>
+              <span><i class="legend-dot booked"></i>Booked</span>
+            </div>
+            <div id="seat-map" class="seat-map" aria-label="Seat map"></div>
+            <div id="fare-summary" class="fare-summary">Select seats to calculate fare.</div>
+            <form id="booking-form" class="booking-form">
+              <label>
+                Passenger Name
+                <input id="passenger-name" type="text" placeholder="Passenger name" disabled required>
+              </label>
+              <button id="book-ticket" class="primary-button" type="submit" disabled>
+                <span aria-hidden="true">+</span>
+                Book Ticket
+              </button>
+            </form>
+          </section>
+        </div>
+
+        <section class="surface" aria-labelledby="my-bookings-heading">
+          <div class="section-title-row">
+            <h3 id="my-bookings-heading">My Bookings</h3>
+            <div class="booking-toolbar">
+              <select id="booking-status-filter" aria-label="Filter bookings">
+                <option value="All">All</option>
+                <option value="Booked">Booked</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <span id="my-bookings-count" class="small-badge">0 bookings</span>
+            </div>
+          </div>
+          <div id="my-bookings" class="booking-list"></div>
+        </section>
+      </section>
+
+      <section id="admin-panel" class="module-panel" data-panel="admin">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Admin Module</p>
+            <h2>Add, update, delete, and view bookings</h2>
+          </div>
+          <span id="admin-state" class="module-state">Locked</span>
+        </div>
+
+        <form id="admin-login-form" class="surface compact-form" autocomplete="off">
+          <h3>Admin Access</h3>
+          <label>
+            Admin Code
+            <input id="admin-code" type="password" placeholder="admin123" required>
+          </label>
+          <button class="primary-button" type="submit">
+            <span aria-hidden="true">&gt;</span>
+            Unlock Admin
+          </button>
+        </form>
+
+        <div id="admin-workspace" class="admin-workspace hidden">
+          <section class="stats-grid" aria-label="Admin overview">
+            <article class="stat-card">
+              <span class="stat-label">Total Listings</span>
+              <strong id="admin-stat-routes">0</strong>
+              <span class="stat-note">Routes and events</span>
+            </article>
+            <article class="stat-card">
+              <span class="stat-label">Booked Seats</span>
+              <strong id="admin-stat-seats">0</strong>
+              <span class="stat-note">Active bookings only</span>
+            </article>
+            <article class="stat-card">
+              <span class="stat-label">Total Bookings</span>
+              <strong id="admin-stat-bookings">0</strong>
+              <span class="stat-note">All statuses</span>
+            </article>
+            <article class="stat-card accent-stat">
+              <span class="stat-label">Revenue</span>
+              <strong id="admin-stat-revenue">₹0</strong>
+              <span class="stat-note">Confirmed bookings</span>
+            </article>
+          </section>
+
+          <form id="route-form" class="surface" autocomplete="off">
+            <div class="section-title-row">
+              <h3 id="route-form-title">Add Routes/Events</h3>
+              <button id="route-form-reset" class="ghost-button small-button" type="button">
+                <span aria-hidden="true">x</span>
+                Clear
+              </button>
+            </div>
+            <input id="route-id" type="hidden">
+            <div class="form-grid">
+              <label>
+                Type
+                <select id="route-type" required>
+                  <option value="Bus">Bus</option>
+                  <option value="Train">Train</option>
+                  <option value="Event">Event</option>
+                </select>
+              </label>
+              <label>
+                Route/Event Name
+                <input id="route-name" type="text" placeholder="Express 210 / Music Night" required>
+              </label>
+              <label>
+                From / Venue
+                <input id="route-origin" type="text" placeholder="Delhi / City Arena" required>
+              </label>
+              <label>
+                To / Category
+                <input id="route-destination" type="text" placeholder="Jaipur / Concert" required>
+              </label>
+              <label>
+                Date
+                <input id="route-date" type="date" required>
+              </label>
+              <label>
+                Time
+                <input id="route-time" type="time" required>
+              </label>
+              <label>
+                Price
+                <input id="route-price" type="number" min="1" step="1" placeholder="499" required>
+              </label>
+              <label>
+                Total Seats
+                <input id="route-seats" type="number" min="1" max="80" step="1" placeholder="40" required>
+              </label>
+              <label>
+                Status
+                <select id="route-status" required>
+                  <option value="Active">Active</option>
+                  <option value="Paused">Paused</option>
+                </select>
+              </label>
+            </div>
+            <button class="primary-button" type="submit">
+              <span aria-hidden="true">+</span>
+              Save Route/Event
+            </button>
+          </form>
+
+          <section class="surface" aria-labelledby="manage-routes-heading">
+            <div class="section-title-row">
+              <h3 id="manage-routes-heading">Update Routes / Delete Routes</h3>
+              <button id="reset-demo-data" class="ghost-button small-button" type="button">
+                <span aria-hidden="true">v</span>
+                Restore Sample Data
+              </button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>From / Venue</th>
+                    <th>To / Category</th>
+                    <th>Date</th>
+                    <th>Seats</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-route-table"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="surface" aria-labelledby="admin-bookings-heading">
+            <div class="section-title-row">
+              <h3 id="admin-bookings-heading">View Bookings</h3>
+              <span id="admin-bookings-count" class="small-badge">0 bookings</span>
+            </div>
+            <div id="admin-bookings" class="booking-list"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/user-module.js"></script>
+  <script src="js/ticket-module.js"></script>
+  <script src="js/admin-module.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
