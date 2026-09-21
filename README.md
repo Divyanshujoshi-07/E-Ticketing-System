@@ -197,14 +197,6 @@ Open index.html in your browser
 
 ---
 
-## 👨‍💻 Author
-
-**Divyanshu Joshi**
-
-
-
----
-
 ## 📜 License
 
 This project is developed for educational and learning purposes.
